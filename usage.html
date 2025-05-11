@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>使用教程</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('beijing.png') center/cover no-repeat;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        .tutorial-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            padding: 2rem;
+            border-radius: 8px;
+        }
+        .btn-custom {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            background: white;
+            color: #333;
+            height: 40px;
+            min-width: 100px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-custom:hover {
+            background: rgba(255,255,255,0.9);
+        }
+        .api-endpoint {
+            margin-bottom: 2rem;
+            padding: 1.5rem;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+        }
+        .code-block {
+            background-color: #212529;
+            color: #f8f9fa;
+            padding: 1rem;
+            border-radius: 6px;
+            font-family: 'Courier New', monospace;
+            overflow-x: auto;
+        }
+        .note {
+            background-color: #fff3cd;
+            padding: 1rem;
+            border-radius: 6px;
+            border-left: 4px solid #ffc107;
+        }
+    </style>
+</head>
+<body>
+    <div class="tutorial-container">
+        <h1 class="mb-4">API使用教程</h1>
+        <a href="index.html" class="btn btn-primary position-absolute top-0 start-0 m-3 px-4 py-2 shadow-sm" style="font-size: 1.1rem;">返回首页</a>
+        
+        <div class="api-endpoint">
+            <h3>基础信息</h3>
+            <p>API基础URL: <code>http://[YOUR_DOMAIN_OR_IP]/api</code></p>
+            <p>所有请求都需要在Header中添加: <code>Content-Type: application/json</code></p>
+        </div>
+        
+        <div class="api-endpoint">
+            <h3>1. 处理静态图片</h3>
+            <p><strong>Endpoint:</strong> <code>GET /process-image?imageUrl=URL</code></p>
+            
+            <h4 class="mt-3">请求参数</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>参数</th>
+                        <th>类型</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>imageUrl</td>
+                        <td>string</td>
+                        <td>要处理的图片URL</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4 class="mt-3">示例请求</h4>
+            <div class="code-block">
+                GET http://[YOUR_DOMAIN_OR_IP]/api/process-image?imageUrl=https://example.com/photo.jpg
+            </div>
+            
+            <div class="note mt-3">
+                <strong>注意：</strong> 图片URL必须是公开可访问的。
+            </div>
+        </div>
+        
+        <div class="api-endpoint">
+            <h3>2. 处理GIF动画</h3>
+            <p><strong>Endpoint:</strong> <code>GET /processGif?gifUrl=URL</code></p>
+            
+            <h4 class="mt-3">请求参数</h4>
+            <table class="table table-bordered">
+                <thead>
+                    <tr>
+                        <th>参数</th>
+                        <th>类型</th>
+                        <th>说明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>gifUrl</td>
+                        <td>string</td>
+                        <td>要处理的GIF URL</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <h4 class="mt-3">示例请求</h4>
+            <div class="code-block">
+                GET http://[YOUR_DOMAIN_OR_IP]/api/processGif?gifUrl=https://example.com/animation.gif
+            </div>
+            
+            <div class="note mt-3">
+                <strong>注意：</strong> 处理GIF可能需要较长时间，取决于GIF的大小和帧数。
+            </div>
+        </div>
+        
+        <div class="api-endpoint">
+            <h3>3. 客户端代码示例</h3>
+            
+            <h4 class="mt-3">JavaScript Fetch示例</h4>
+            <div class="code-block">
+                // 处理静态图片<br>
+                fetch('http://[YOUR_DOMAIN_OR_IP]/api/process-image?imageUrl=' + encodeURIComponent(imageUrl))<br>
+                &nbsp;&nbsp;.then(response => response.json())<br>
+                &nbsp;&nbsp;.then(data => console.log(data));<br><br>
+                
+                // 处理GIF<br>
+                fetch('http://[YOUR_DOMAIN_OR_IP]/api/processGif?gifUrl=' + encodeURIComponent(gifUrl))<br>
+                &nbsp;&nbsp;.then(response => response.json())<br>
+                &nbsp;&nbsp;.then(data => console.log(data));
+            </div>
+        </div>
+    </div>
+</body>
+</html>

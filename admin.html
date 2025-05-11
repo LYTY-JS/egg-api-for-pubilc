@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理员控制</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <style>
+        body {
+            background: url('beijing.png') center/cover no-repeat;
+            background-size: cover;
+            min-height: 100vh;
+            margin: 0;
+            padding: 2rem;
+            font-family: 'Segoe UI', 'Microsoft YaHei', sans-serif;
+        }
+        .login-container, .admin-panel {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            border-radius: 8px;
+            background: white;
+            box-shadow: 0 0 15px rgba(0,0,0,0.1);
+        }
+        .hidden {
+            display: none;
+        }
+        .btn-custom {
+            padding: 0.5rem 1.5rem;
+            border: none;
+            background: white;
+            color: #333;
+            height: 40px;
+            min-width: 100px;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        .btn-custom:hover {
+            background: rgba(255,255,255,0.9);
+        }
+        .btn-sm-custom {
+            padding: 0.25rem 0.75rem;
+            height: 30px;
+            min-width: 60px;
+            background: white;
+            color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+    </style>
+</head>
+<body>
+    <!-- 登录表单 -->
+    <div class="login-container" id="loginForm">
+        <h2 class="text-center mb-4">管理员登录</h2>
+        <div class="mb-3">
+            <label for="username" class="form-label">用户名</label>
+            <input type="text" class="form-control" id="username" value="administrator" readonly>
+        </div>
+        <div class="mb-3">
+            <label for="password" class="form-label">密码</label>
+            <input type="password" class="form-control" id="password" placeholder="输入密码">
+        </div>
+        <div class="d-flex gap-2">
+            <button class="btn btn-custom flex-grow-1" onclick="login()">登录</button>
+            <button class="btn btn-custom flex-grow-1" onclick="window.location.href='index.html'">取消</button>
+        </div>
+    </div>
+
+    <!-- 管理员面板 -->
+    <div class="admin-panel hidden" id="adminPanel">
+        <h2 class="text-center mb-4">管理员控制面板</h2>
+        
+        <div class="mb-4">
+            <h4>黑名单管理</h4>
+            <div class="input-group mb-3">
+                <input type="text" id="blacklistInput" class="form-control" placeholder="输入QQ号(不需要-)">
+                <button class="btn btn-custom" onclick="addToBlacklist()">添加</button>
+            </div>
+            <ul class="list-group" id="blacklist">
+                <!-- 动态填充黑名单 -->
+            </ul>
+        </div>
+        
+        <button class="btn btn-custom mt-3" onclick="logout()">退出登录</button>
+    </div>
+
+    <script>
+        function login() {
+            const password = document.getElementById('password').value;
+            
+            // 从config.json获取密码
+            fetch('config/config.json')
+                .then(response => response.json())
+                .then(config => {
+                    if (password === config.adminPassword) {
+                        document.getElementById('loginForm').classList.add('hidden');
+                        document.getElementById('adminPanel').classList.remove('hidden');
+                        loadBlacklist();
+                    } else {
+                        alert('密码错误');
+                    }
+                });
+        }
+
+        function logout() {
+            document.getElementById('loginForm').classList.remove('hidden');
+            document.getElementById('adminPanel').classList.add('hidden');
+            document.getElementById('password').value = '';
+        }
+
+        function loadBlacklist() {
+            fetch('config/config.json')
+                .then(response => response.json())
+                .then(config => {
+                    const blacklistEl = document.getElementById('blacklist');
+                    blacklistEl.innerHTML = '';
+                    
+                    config.blacklist.forEach(qq => {
+                        const li = document.createElement('li');
+                        li.className = 'list-group-item d-flex justify-content-between align-items-center';
+                        li.innerHTML = `
+                            ${qq}
+                            <button class="btn btn-sm-custom" onclick="removeFromBlacklist('${qq}')">删除</button>
+                        `;
+                        blacklistEl.appendChild(li);
+                    });
+                });
+        }
+
+        function addToBlacklist() {
+            const qqInput = document.getElementById('blacklistInput').value;
+            if (!qqInput) return;
+            
+            const qq = `-${qqInput}`;
+            
+            fetch('config/config.json')
+                .then(response => response.json())
+                .then(config => {
+                    if (!config.blacklist.includes(qq)) {
+                        config.blacklist.push(qq);
+                        
+                        fetch('config/config.json', {
+                            method: 'PUT',
+                            headers: {
+                                'Content-Type': 'application/json',
+                            },
+                            body: JSON.stringify(config)
+                        })
+                        .then(() => {
+                            document.getElementById('blacklistInput').value = '';
+                            loadBlacklist();
+                        });
+                    }
+                });
+        }
+
+        function removeFromBlacklist(qq) {
+            fetch('config/config.json')
+                .then(response => response.json())
+                .then(config => {
+                    config.blacklist = config.blacklist.filter(item => item !== qq);
+                    
+                    fetch('config/config.json', {
+                        method: 'PUT',
+                        headers: {
+                            'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify(config)
+                    })
+                    .then(() => loadBlacklist());
+                });
+        }
+    </script>
+</body>
+</html>
