@@ -10,45 +10,27 @@
 - Node.js 18+
 - OpenCV (用于图像处理)
 - npm/pnpm (包管理器)
+- cmke
 
 ## 安装指南
 
 ### Windows安装
-1. 安装Node.js:
-   ```powershell
-   winget install OpenJS.NodeJS
-   ```
-
-2. 安装OpenCV:
-   ```powershell
-   choco install opencv
-   ```
-
-3. 克隆项目并安装依赖:
-   ```powershell
-   git clone https://github.com/your-repo/egg-api.git
-   cd egg-api
-   pnpm install
-   ```
+1. 克隆项目
+2. 拉取opencv
+3. 编译opencv
+4. 安装cmake
+5. 安装依赖
+6. 构建opencv4nodejs
+7. node egg-api
 
 ### Linux安装 (Ubuntu/Debian)
-1. 安装Node.js:
-   ```bash
-   curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash -
-   sudo apt-get install -y nodejs
-   ```
-
-2. 安装OpenCV:
-   ```bash
-   sudo apt-get install -y libopencv-dev
-   ```
-
-3. 克隆项目并安装依赖:
-   ```bash
-   git clone https://github.com/your-repo/egg-api.git
-   cd egg-api
-   pnpm install
-   ```
+1. 克隆项目
+2. 拉取opencv
+3. 编译opencv
+4. 安装cmake
+5. 安装依赖
+6. 构建opencv4nodejs
+7. node egg-api
 
 ## 配置说明
 
